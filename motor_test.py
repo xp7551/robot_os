@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 import time
+import curses
 
 class NiksRobot:
 	def __init__(self):
@@ -20,34 +21,51 @@ class NiksRobot:
 		GPIO.output(11,True)
 		GPIO.output(15,False)
 		GPIO.output(13,True)
+        def left(self):
+                GPIO.output(7,False)
+                GPIO.output(11,True)
+                GPIO.output(15,True)
+                GPIO.output(13,False)
+        def right(self):
+                GPIO.output(7,True)
+                GPIO.output(11,False)
+                GPIO.output(15,False)
+                GPIO.output(13,True)
+        def stop(self):
+                GPIO.output(7,False)
+                GPIO.output(11,False)
+                GPIO.output(15,False)
+                GPIO.output(13,False)
 	def cleanup(self):
 		GPIO.cleanup()
-	def f(self):
-		return 'forward'
-	def r(self):
-		print 'reverse'
-	def l(self):
-		print 'left'
-	def r(self):
-		print 'right'
 
 
-print 'start'
 nr = NiksRobot()
-t=nr.f()
-print t
-u=nr.l()
-nr.cleanup
-print 'end'
-#time.sleep(1)
-#GPIO.output(7,False)
-#GPIO.output(11,True)
-#time.sleep(1)
-#GPIO.output(11,False)
-#GPIO.output(15,True)
-#time.sleep(2.5)
-#GPIO.output(13,False)
-#GPIO.output(15,True)
-#time.sleep(2.5)
-#GPIO.output(15,False)
-#GPIO.cleanup()
+screen = curses.initscr()
+curses.noecho() 
+curses.cbreak()
+screen.keypad(True)
+
+try:
+        while True:   
+            char = screen.getch()
+            if char == ord('q'):
+                break
+            elif char == curses.KEY_UP:
+		nr.forward()
+            elif char == curses.KEY_DOWN:
+                nr.backward()
+            elif char == curses.KEY_RIGHT:
+                nr.right()
+            elif char == curses.KEY_LEFT:
+                nr.left()
+            elif char == 10:
+                nr.stop()
+             
+finally:
+    #Close down curses properly, inc turn echo back on!
+    curses.nocbreak(); screen.keypad(0); curses.echo()
+    curses.endwin()
+    nr.cleanup()
+    
+
