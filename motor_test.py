@@ -2,6 +2,10 @@ import RPi.GPIO as GPIO
 import time
 import curses
 
+
+#added motor enable to pi
+#pin 16 ->enable
+#pin 18 ->enable
 class NiksRobot:
 	def __init__(self):
 		#setup
@@ -21,12 +25,12 @@ class NiksRobot:
 		GPIO.output(11,True)
 		GPIO.output(15,False)
 		GPIO.output(13,True)
-        def left(self):
+        def right(self):
                 GPIO.output(7,False)
                 GPIO.output(11,True)
                 GPIO.output(15,True)
                 GPIO.output(13,False)
-        def right(self):
+        def left(self):
                 GPIO.output(7,True)
                 GPIO.output(11,False)
                 GPIO.output(15,False)
@@ -59,7 +63,7 @@ try:
                 nr.right()
             elif char == curses.KEY_LEFT:
                 nr.left()
-            elif char == 10:
+            elif char == ord('p'):
                 nr.stop()
              
 finally:
